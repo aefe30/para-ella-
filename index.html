@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08060a">
+<title>Para Emi ♡</title>
+<style>
+:root{--bg:#08060a;--fg:#fff7fb;--soft:#d9cbd2;--pink:#ff6fae;--pink2:#ffb5d3}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{background:radial-gradient(circle at 50% 35%,#24101c 0,#0d080c 34%,#050407 75%);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0}
+.screen{position:relative;z-index:2;width:100%;height:100%;display:grid;place-items:center;padding:24px}
+.panel{width:min(680px,94vw);text-align:center}
+.eyebrow{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:#9b7d8b;margin-bottom:25px}
+h1{font-size:clamp(38px,11vw,78px);line-height:.95;letter-spacing:-.055em;margin:0 0 22px}
+h1 span{color:var(--pink)}
+.sub{max-width:510px;margin:auto;color:var(--soft);font-size:clamp(15px,4vw,19px);line-height:1.65}
+.btn{margin-top:34px;border:1px solid rgba(255,111,174,.35);background:rgba(255,111,174,.08);color:#fff;border-radius:999px;padding:14px 25px;font-size:15px;cursor:pointer;box-shadow:0 0 40px rgba(255,111,174,.08);transition:.25s}
+.btn:hover{transform:translateY(-2px) scale(1.03);background:rgba(255,111,174,.14)}
+.page{position:fixed;inset:0;z-index:4;display:grid;place-items:center;padding:25px;background:rgba(5,4,7,.86);backdrop-filter:blur(12px);opacity:0;visibility:hidden;transition:.8s}
+.page.show{opacity:1;visibility:visible}
+.card{width:min(620px,94vw);max-height:90dvh;overflow:auto;text-align:center;padding:38px 25px;border:1px solid rgba(255,181,211,.13);border-radius:28px;background:rgba(15,9,14,.82);box-shadow:0 20px 100px rgba(0,0,0,.45)}
+.heart{font-size:54px;display:block;margin-bottom:16px;animation:beat 1.7s infinite}
+@keyframes beat{50%{transform:scale(1.12)}}
+.card h2{font-size:clamp(30px,8vw,52px);margin:0 0 20px;letter-spacing:-.04em}
+.letter{color:#e5d9df;font-size:16px;line-height:1.85;max-width:520px;margin:auto;white-space:pre-line}
+.sign{margin-top:26px;color:var(--pink2);font-size:14px;letter-spacing:.12em}
+.small{margin-top:25px;color:#806c75;font-size:12px}
+#close{margin-top:25px}
+.fade{animation:fadeUp .9s both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+
+<main class="screen">
+  <section class="panel fade">
+    <div class="eyebrow">Una pequeña sorpresa para ti</div>
+    <h1>Emi<span> ♡</span></h1>
+    <p class="sub">
+      No hace falta que hagas nada especial.<br>
+      Solo pulsa el botón y déjame enseñarte algo que quería decirte.
+    </p>
+    <button class="btn" id="open">Abrir mi sorpresa</button>
+  </section>
+</main>
+
+<section class="page" id="page" aria-hidden="true">
+  <article class="card fade">
+    <span class="heart">♥</span>
+    <h2>Para ti, Emi</h2>
+
+    <!-- CAMBIA EL TEXTO DE ABAJO POR TU CARTA -->
+    <p class="letter">A veces me cuesta encontrar las palabras exactas para decirte todo lo que siento.
+
+Pero hay algo que sí tengo claro: me importas muchísimo.
+
+Me gusta compartir contigo las pequeñas cosas, reírnos por cualquier tontería, hablar de anime, jugar, vernos y simplemente estar juntos.
+
+No quiero que esta página sea una forma de decirte algo enorme ni de presionarte. Solo quería dejarte un pequeño detalle que te recuerde que hay alguien que te quiere y que valora muchísimo cada momento contigo.
+
+Gracias por formar parte de mi vida, Emi.
+
+Y espero que cuando veas esto se te escape aunque sea una pequeña sonrisa. ♡</p>
+
+    <div class="sign">Con cariño, Erik</div>
+    <div class="small">Hecho especialmente para ti.</div>
+    <button class="btn" id="close">Volver</button>
+  </article>
+</section>
+
+<script>
+const canvas=document.getElementById("stars"),ctx=canvas.getContext("2d");
+let w,h,dpr,stars=[];
+function resize(){
+ dpr=Math.min(devicePixelRatio||1,2); w=innerWidth; h=innerHeight;
+ canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+ stars=Array.from({length:Math.min(140,Math.floor(w*h/7000))},()=>({
+   x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.5+.2,a:Math.random(),s:Math.random()*.012+.003
+ }));
+}
+function draw(){
+ ctx.clearRect(0,0,w,h);
+ for(const s of stars){
+   s.a+=s.s;if(s.a>1||s.a<.15)s.s*=-1;
+   ctx.globalAlpha=s.a*.55;ctx.fillStyle="#ffd7e7";
+   ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+ }
+ requestAnimationFrame(draw);
+}
+addEventListener("resize",resize);resize();draw();
+
+const page=document.getElementById("page");
+document.getElementById("open").onclick=()=>{
+ page.classList.add("show");page.setAttribute("aria-hidden","false");
+ burst();
+};
+document.getElementById("close").onclick=()=>{
+ page.classList.remove("show");page.setAttribute("aria-hidden","true");
+};
+function burst(){
+ for(let i=0;i<55;i++){
+  const e=document.createElement("div");e.textContent=Math.random()>.25?"♥":"✦";
+  e.style.cssText=`position:fixed;z-index:10;left:50%;top:50%;pointer-events:none;color:#ff6fae;font-size:${10+Math.random()*18}px;`;
+  document.body.appendChild(e);
+  const a=Math.random()*Math.PI*2,dist=100+Math.random()*280;
+  e.animate([{transform:"translate(-50%,-50%) scale(.4)",opacity:1},
+    {transform:`translate(calc(-50% + ${Math.cos(a)*dist}px),calc(-50% + ${Math.sin(a)*dist}px)) scale(1.2)`,opacity:0}],
+    {duration:1000+Math.random()*500,easing:"cubic-bezier(.1,.8,.2,1)"});
+  setTimeout(()=>e.remove(),1600);
+ }
+}
+</script>
+</body>
+</html>
